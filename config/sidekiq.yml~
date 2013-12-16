@@ -1,0 +1,9 @@
+---
+:concurrency: 5
+:pidfile: tmp/pids/sidekiq.pid
+development:
+  :concurrency: 4
+production:
+  :concurrency: 25
+:queues:
+  - [high, 20]

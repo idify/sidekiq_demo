@@ -1,0 +1,20 @@
+<h1>Products#index</h1>
+<table width="600px">
+ <tr>
+  <th>Product Name</th>
+  <th>Manufacturer Name</th>
+  <th>Short Description</th>
+  <th>Currency</th>
+  <th>price</th>
+ </tr>
+<%@products.each do |p| %>
+  <tr>
+   <td><%= p.product_name %></td>
+   <td><%= p.manufacturer_name %></td>
+   <td><%= p.short_description %></td>
+   <td><%= p.currency %></td>
+   <td><%= p.price %></td>
+  </tr>
+<% end %>
+</table>
+<%= link_to "Import Product" , new_product_path %>

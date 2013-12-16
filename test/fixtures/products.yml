@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  product_name: MyString
+  manufacturer_name: MyString
+  short_description: MyText
+  long_description: MyText
+  currency: MyString
+  price: 1.5
+
+two:
+  product_name: MyString
+  manufacturer_name: MyString
+  short_description: MyText
+  long_description: MyText
+  currency: MyString
+  price: 1.5
