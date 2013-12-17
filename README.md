@@ -25,3 +25,17 @@ Next we’ll add the Sidekiq gem to the gemfile and run bundle to install it.
 ```
 gem 'sidekiq'
 ```
+#Getting Started
+
+After installing redis-server add ```sidekiq.rb``` file withing ```config/initializer``` and configure sidekiq with redis server.
+
+```
+Sidekiq.configure_server do |config|
+  config.redis = { :url => 'redis://localhost:6379', :namespace => 'sidekiq_demo' }
+end
+
+Sidekiq.configure_client do |config|
+  config.redis = { :url => 'redis://localhost:6379', :namespace => 'sidekiq_demo' }
+end
+```
+
