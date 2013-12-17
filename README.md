@@ -39,3 +39,16 @@ Sidekiq.configure_client do |config|
 end
 ```
 
+There are several interfaces that Sidekiq supports. The most common way to use it is to create a separate worker class and we’ll do this, creating a class in a new ```app/workers``` directory. Putting it here ensures that it’s auto-loaded by the application.
+
+```
+class ProcessImportWorker
+  include Sidekiq::Worker
+  sidekiq_options :queue => :high
+
+  def perform file
+   Product.import file
+  end
+end
+```
+
