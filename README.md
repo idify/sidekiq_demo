@@ -126,5 +126,5 @@ gem 'slim'
 ```
 If we visit the ```/sidekiq``` path now we’ll see the web interface which tells us how many jobs have been processed, the number of failures, the currently-active workers and what queues we have.
 
-![alt tag](https://github.com/idify/sidekiq_demo/tree/master/public/sidekiq.png)
+![alt tag](https://github.com/idify/sidekiq_demo/blob/master/public/sidekiq.png)
 
