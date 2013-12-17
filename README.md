@@ -52,7 +52,7 @@ class ProcessImportWorker
 end
 ```
 
-This class needs to include the ```Sidekiq::Worker``` module, which we’ll discuss later, and have a perform method which contains the code that we want to run in the background. We’ll move the syntax-highlighting code from the controller into this method. To do this we call PygmentsWorker.perform_async which will add the job to Redis and then call perform asynchronously.
+This class needs to include the ```Sidekiq::Worker``` module, and have a perform method which contains the code that we want to run in the background. We’ll move the syntax-highlighting code from the controller into this method. To do this we call PygmentsWorker.perform_async which will add the job to Redis and then call perform asynchronously.
 
 Now in the worker class we add the code to perform background process
 
@@ -93,5 +93,36 @@ class ProductsController < ApplicationController
   end
 end
 ```
+#Sidekiq’s Features
 
+Now that we know how to set up Sidekiq we’ll take a look at some of its features. the ability to prioritize queues. Let’s say that our application has multiple workers and we want certain ones to be processed first. To do this we’ll need to assign a worker to a specific queue and we can do this by setting the queue option, like this:
+
+```
+class ProcessImportWorker
+  include Sidekiq::Worker
+  sidekiq_options :queue => :high
+
+   # Rest of class 
+```
+
+If we don’t specify the name of a queue the worker will default to a queue called default. When we run the sidekiq command now we can specify the queues that we want to be processed with the -q option and give each one a relative weight.
+
+```
+bundle exec sidekiq -q high,5 default,1 -P tmp/pids/sidekiq.pid -L log/sidekiq.log -d
+```
+
+#Monitoring Sidekiq
+
+Next we’ll talk about monitoring the workers. Sidekiq includes a web interface, which is a Sinatra app that we can mount inside our Rails app in the routes file. we need to add route for that in ```config/routes.rb```
+```
+ mount Sidekiq::Web, at: '/sidekiq'
+```
+
+and we need to add gem within ```Gemfile```
+
+```
+gem 'sinatra', require: false
+gem 'slim'
+```
+If we visit the /sidekiq path now we’ll see the web interface which tells us how many jobs have been processed, the number of failures, the currently-active workers and what queues we have.
 
