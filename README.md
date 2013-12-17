@@ -46,9 +46,52 @@ class ProcessImportWorker
   include Sidekiq::Worker
   sidekiq_options :queue => :high
 
-  def perform file
-   Product.import file
+  def perform
+
   end
 end
 ```
+
+This class needs to include the ```Sidekiq::Worker``` module, which we’ll discuss later, and have a perform method which contains the code that we want to run in the background. We’ll move the syntax-highlighting code from the controller into this method. To do this we call PygmentsWorker.perform_async which will add the job to Redis and then call perform asynchronously.
+
+Now in the worker class we add the code to perform background process
+
+```
+class ProcessImportWorker
+  include Sidekiq::Worker
+  sidekiq_options :queue => :high
+
+  def perform file
+   Product.import file  #import is a class method in Model
+  end
+end
+```
+Add method ```import``` in Product Model
+
+```
+ def self.import(file)
+  CSV.foreach(file, headers: true) do |row| 
+   product_hash = row.to_hash # exclude the price field
+   product = Product.where(id: product_hash["id"])
+   if product.count == 1
+    product.first.update_attributes(product_hash)
+   else
+    Product.create!(product_hash)
+   end # end if !product.nil?
+  end # end CSV.foreach
+ end # end self.import(file)
+
+```
+We call the Worker method from controller to perform background operation to upload product from csv.
+
+```
+class ProductsController < ApplicationController 
+
+  def import
+   ProcessImportWorker.perform_async params[:file].path
+   redirect_to root_url, notice: "Products imported."
+  end
+end
+```
+
 
