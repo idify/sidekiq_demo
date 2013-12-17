@@ -19,3 +19,9 @@ and if you’re running OS X the easiest way to do this to use Homebrew to insta
 ```
 $ brew install redis
 ```
+
+Next we’ll add the Sidekiq gem to the gemfile and run bundle to install it.
+
+```
+gem 'sidekiq'
+```
